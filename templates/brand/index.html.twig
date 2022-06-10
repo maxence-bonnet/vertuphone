@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des marques{% endblock %}
+
+{% block body %}
+    <h1>Les marques de téléphones</h1>
+    <table id="phones-list" class="table stripe row-border">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Nombre de modèles</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for brand in brands %}
+            <tr>
+                <td>{{ brand.name }}</td>
+                <td>{{ brand.phones|length }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2" class="text-center">Aucune marque de téléphone</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

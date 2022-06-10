@@ -3,8 +3,8 @@
 {% block title %}Liste des téléphones{% endblock %}
 
 {% block body %}
-    <h1>Les téléphones</h1>
-    <a href="{{ path('app_phone_new') }}" class="btn btn-primary mb-3">Ajouter un téléphone</a>
+    <h1>Les modèles de téléphones</h1>
+    <a href="{{ path('app_phone_new') }}" class="btn btn-primary mb-3">Ajouter un modèle de téléphone</a>
     <table id="phones-list" class="table stripe row-border">
         <thead>
             <tr>
@@ -38,7 +38,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6" class="text-center">Aucun téléphone</td>
+                <td colspan="6" class="text-center">Aucun modèle de téléphone</td>
             </tr>
         {% endfor %}
         </tbody>

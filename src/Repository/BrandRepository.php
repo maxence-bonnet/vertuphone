@@ -21,6 +21,15 @@ class BrandRepository extends ServiceEntityRepository
         parent::__construct($registry, Brand::class);
     }
 
+    public function findAllJoinPhone()
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b', 'p')
+            ->leftJoin('b.phones', 'p')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function add(Brand $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
