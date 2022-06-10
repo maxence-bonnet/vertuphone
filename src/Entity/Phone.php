@@ -3,7 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\PhoneRepository;
+use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PhoneRepository::class)]
 class Phone
@@ -14,15 +18,29 @@ class Phone
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(
+        message: 'Vous devez saisir un nom de modèle',
+    )]
     private $model;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(
+        message: 'Vous devez saisir une description',
+    )]
     private $description;
 
     #[ORM\Column(type: 'integer')]
-    private $stock;
+    #[Assert\GreaterThan(
+        value: 0,
+    )]
+    private $limitStock = 0;
 
-    #[ORM\Column(type: 'string', length: 4, nullable: true)]
+    #[ORM\Column(type: 'integer', length: 4, nullable: true)]
+    #[Assert\Range(
+        min: 1980,
+        max: 2050,
+        notInRangeMessage: 'L\'année de création est invalide',
+    )]
     private $creationYear;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -33,10 +51,24 @@ class Phone
 
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'phones')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(
+        message: 'Vous devez choisir une marque',
+    )]
     private $brand;
 
-    #[ORM\Column(type: 'array')]
-    private $imies = [];
+    #[ORM\Column(type: 'boolean')]
+    private $isActive = true;
+
+    #[ORM\OneToMany(mappedBy: 'phone', targetEntity: IMEI::class, cascade: ['persist'])]
+    #[Assert\Valid()]
+    private $imeis;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+        $this->imeis = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -67,14 +99,14 @@ class Phone
         return $this;
     }
 
-    public function getStock(): ?int
+    public function getLimitStock(): ?int
     {
-        return $this->stock;
+        return $this->limitStock;
     }
 
-    public function setStock(int $stock): self
+    public function setLimitStock(int $limitStock): self
     {
-        $this->stock = $stock;
+        $this->limitStock = $limitStock;
 
         return $this;
     }
@@ -127,14 +159,46 @@ class Phone
         return $this;
     }
 
-    public function getImies(): ?array
+
+
+    public function isIsActive(): ?bool
     {
-        return $this->imies;
+        return $this->isActive;
     }
 
-    public function setImies(array $imies): self
+    public function setIsActive(bool $isActive): self
     {
-        $this->imies = $imies;
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, IMEI>
+     */
+    public function getIMEIS(): Collection
+    {
+        return $this->imeis;
+    }
+
+    public function addIMEI(IMEI $imei): self
+    {
+        if (!$this->imeis->contains($imei)) {
+            $this->imeis[] = $imei;
+            $imei->setPhone($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIMEI(IMEI $imei): self
+    {
+        if ($this->imeis->removeElement($imei)) {
+            // set the owning side to null (unless already changed)
+            if ($imei->getPhone() === $this) {
+                $imei->setPhone(null);
+            }
+        }
 
         return $this;
     }

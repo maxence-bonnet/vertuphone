@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un téléphone{% endblock %}
+
+{% block body %}
+    <h1>Modifier un téléphone</h1>
+
+    {{ include('phone/_form.html.twig', {'editMode': true}) }}
+
+    <a href="{{ path('app_phone_index') }}" class="btn btn-secondary">Retour</a>
+{% endblock %}

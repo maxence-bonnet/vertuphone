@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des téléphones{% endblock %}
+
+{% block body %}
+    <h1>Les téléphones</h1>
+    <a href="{{ path('app_phone_new') }}" class="btn btn-primary mb-3">Ajouter un téléphone</a>
+    <table id="phones-list" class="table stripe row-border">
+        <thead>
+            <tr>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Année de création</th>
+                <th>IMEIs</th>
+                <th>En stock / Stock limite</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for phone in phones %}
+            <tr>
+                <td>{{ phone.brand.name }}</td>
+                <td>{{ phone.model }}</td>
+                <td>{{ phone.creationYear ?? 'non renseigné' }}</td>
+                <td>
+                    {% for imei in phone.imeis %}
+                        {{ imei.number }}{% if not loop.last %}, {% endif %}
+                    {% else %}
+                        Aucun
+                    {% endfor %}
+                </td>
+                <th class="{{ phone.imeis|length < phone.limitStock ? "text-danger" }}">
+                    {{ phone.imeis|length }} / {{ phone.limitStock }}
+                </th>
+                <td>
+                    <a href="{{ path('app_phone_show', {'id': phone.id}) }}" class="btn btn-primary">Voir</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center">Aucun téléphone</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('#phones-list').DataTable({
+                'dom': 't',
+            });
+        });
+    </script>
+{% endblock %}

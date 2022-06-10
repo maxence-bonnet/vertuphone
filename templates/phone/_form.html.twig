@@ -1,0 +1,81 @@
+{{ form_start(form) }}
+
+    {{ form_row(form.isActive, {
+        'row_attr': {'class': 'form-check form-switch ps-3'},
+        'attr': {'class': 'form-check-input'},
+        'label_attr': {'class': 'form-check-label'},
+    }) }}
+    
+    {{ form_row(form.brand, {
+
+    }) }}
+
+    {{ form_row(form.model, {
+        
+    }) }}
+
+    {{ form_row(form.creationYear, {
+        
+    }) }}
+
+    {{ form_row(form.description, {
+
+    }) }}
+
+    {{ form_row(form.limitStock, {
+
+    }) }}
+  
+    {% if editMode %}
+
+        <div>
+            <h2>Liste des numéros d'identifications (IMIE) : </h2>
+            <div id="phone-imeis" class="collectionHolder">
+            <table>
+                {% for imei in form.imeis %}
+                    <div class="collectionItem">
+                        <div id='imei__{{ loop.index }}'>
+                            {{ form_row(imei.number, {
+                                label: false,
+                                attr: {
+                                    },
+                            }) }}
+                        </div>
+                    </div>   
+                {% endfor %}            
+            </table>
+
+            </div>
+            <div class="d-flex justify-content-center">
+                <span
+                    id="phone-imeis-form-prototype"
+                    data-prototype=
+                    "<div id='imei__name__'>
+                        {{ form_row(form.imeis.vars.prototype.number, {
+                            'label': false
+                        })|e('html_attr') }}
+                    </div>
+                    <div>
+                        <button type='button' class='btn btn-sm btn-danger me-auto mt-auto'>
+                            Annuler
+                        </button>
+                    </div>"
+                ></span>
+                <div class="text-start">
+                    <button type="button" class="btn btn-secondary addSubformButton" data-target="phone-imeis">
+                        +
+                    </button>
+                </div>    
+            </div>
+        <script src="{{ asset('js/myformcollection.js') }}"></script>
+        <script>
+            window.addEventListener('load', () =>{
+                let myCollection = new DynamicFormCollection({
+                    collectionItemClasses: [],
+                })            
+            })
+        </script>
+    </div> 
+    {% endif %}
+    <button class="btn btn-primary mb-3">{{ editMode ? 'Enregister' : 'Ajouter' }}</button>
+{{ form_end(form) }}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un téléphone{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un téléphone</h1>
+
+    {{ include('phone/_form.html.twig', {'editMode': false}) }}
+
+    <a href="{{ path('app_phone_index') }}" class="btn btn-secondary">Retour</a>
+{% endblock %}

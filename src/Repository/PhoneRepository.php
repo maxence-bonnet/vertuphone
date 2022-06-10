@@ -21,6 +21,29 @@ class PhoneRepository extends ServiceEntityRepository
         parent::__construct($registry, Phone::class);
     }
 
+    public function findLastStockout()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->innerJoin('p.brand', 'b')
+            ->orderBy('p.updatedAt', 'DESC')
+            // WHERE p.imeis <= p.limitStock ? :(
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllJoinAll()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p', 'b', 'i')
+            ->innerJoin('p.brand', 'b')
+            ->leftJoin('p.imeis', 'i')
+            ->andWhere('p.isActive = 1')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function add(Phone $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -38,29 +61,4 @@ class PhoneRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-//    /**
-//     * @return Phone[] Returns an array of Phone objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Phone
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

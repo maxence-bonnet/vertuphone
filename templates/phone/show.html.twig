@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ phone.brand }} {{ phone.model }}{% endblock %}
+
+{% block body %}
+    <h1>{{ phone.brand }} {{ phone.model }}</h1>
+
+    <table class="table table-bordered table-hover">
+        <tbody>
+            <tr>
+                <th>Marque</th>
+                <td>{{ phone.brand }}</td>
+            </tr>
+            <tr>
+                <th>Modèle</th>
+                <td>{{ phone.model }}</td>
+            </tr>
+            <tr>
+                <th>Stock limite</th>
+                <td>{{ phone.limitStock }}</td>
+            </tr>
+            <tr>
+                <th>CreationYear</th>
+                <td>{{ phone.creationYear }}</td>
+            </tr>
+            <tr>
+                <th>Créé le :</th>
+                <td>{{ phone.createdAt ? phone.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Dernière mise à jour le :</th>
+                <td>{{ phone.updatedAt ? phone.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Liste des IMEIs</th>
+                <td>
+                {% for imei in phone.imeis  %}
+                    {{ imei }}{% if not loop.last %}, {% endif %}
+                {% else %}
+                    Aucun
+                {% endfor %}
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <div>
+        <h2>Description</h2>
+        {{ phone.description|raw }}
+    </div>
+
+    <a href="{{ path('app_phone_index') }}" class="btn btn-secondary">Retour</a>
+
+    <a href="{{ path('app_phone_edit', {'id': phone.id}) }}" class="btn btn-primary">Modifier</a>
+{% endblock %}
